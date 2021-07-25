@@ -5,8 +5,7 @@ The stage of the project consists of the following:
 
 1. Extracting Ethereum data from Yahoo Finance
 2. Preprocessing data using MinMaxScaler
-3. Define the Time2Vec + LSTM model (code borrowed from https://www.kaggle.com/danofer/time2vec-water-levels). 
-4. Generate sequence and labels to prepare data to feed in the model
+3. Define the Time2Vec model + LSTM (code borrowed from https://www.kaggle.com/danofer/time2vec-water-levels). Generate sequence and labels to prepare data to feed in the model.
 5. Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
 6. Apply the best parameters in the Time2Vec + LSTM model
 7. Display the model loss with training and testing sets in plt graph
@@ -40,7 +39,7 @@ Note that we are currently using approximately 5 years of data for this project.
     close_price = df.Close.values.reshape(-1, 1) # -1 in reshape function is used when you dont know or want to explicitly tell the dimension of that axis
     scaled_close = scaler.fit_transform(close_price) # This method performs fit and transform on the input data at a single time and converts the data points
 
-#### Part 3 - Define the Time2Vec + LSTM model
+#### Part 3 - Define the Time2Vec + LSTM model. Generate sequence and labels to prepare data to feed in the model, and perform train and test split. 
 
     from tensorflow.keras import backend as K # Keras is a model-level library, providing high-level building blocks for developing deep learning models. It does not handle itself low-level operations such as tensor products, convolutions and so on. Instead, it relies on a specialized, well-optimized tensor manipulation library to do so, serving as the “backend engine” of Keras.
     from tensorflow.keras.layers import Layer
@@ -81,3 +80,55 @@ Note that we are currently using approximately 5 years of data for this project.
             sin_trans = K.sin(K.dot(x, self.W) + self.P) # Frequecy and phase shift of sine function, learnable parameters. if 1 <= i <= k
 
             return K.concatenate([sin_trans, original], -1)
+			
+		
+		##### To create X and Y for you
+		def gen_sequence(id_df, seq_length, seq_cols):
+			
+			data_matrix = id_df[seq_cols].values
+			num_elements = data_matrix.shape[0]
+
+			for start, stop in zip(range(0, num_elements-seq_length), range(seq_length, num_elements)):
+				yield data_matrix[start:stop, :]
+
+		def gen_labels(id_df, seq_length, label):
+			
+			data_matrix = id_df[label].values
+			num_elements = data_matrix.shape[0]
+			
+			return data_matrix[seq_length:num_elements, :]
+			
+		
+		
+		def T2V_NN(param, dim):
+    
+			inp = layers.Input(shape=(dim,1))
+			x = T2V(param['t2v_dim'])(inp)
+			x = LSTM(param['unit'], activation=param['act'])(x)
+			x = Dense(1)(x)
+			
+			m = Model(inp, x)
+			m.compile(loss='mse', optimizer='adam')
+    
+		return m
+		
+		##### PREPARE DATA TO FEED MODELS #####
+		SEQ_LEN = 20 # pattern X is the size of Seq_len (e.g. use the first 20 days to predict 21st day)
+		X, Y = [], []
+		for sequence in gen_sequence(df, SEQ_LEN, ['Close']):
+			X.append(sequence)
+			
+		for sequence in gen_labels(df, SEQ_LEN, ['Close']):
+			Y.append(sequence)
+			
+		X = np.asarray(X)
+		Y = np.asarray(Y)
+		
+		##### TRAIN TEST SPLIT #####
+
+		train_dim = int(0.7*len(df))
+		X_train, X_test = X[:train_dim], X[train_dim:]
+		y_train, y_test = Y[:train_dim], Y[train_dim:]
+
+		print(X_train.shape, y_train.shape)
+		print(X_test.shape, y_test.shape)

@@ -223,19 +223,19 @@ Stanley Tran
 
 ## References
 
-### Reseach Papers
+#### Reseach Papers
 https://arxiv.org/pdf/1907.05321.pdf
 https://openreview.net/attachment?id=rklklCVYvB&name=original_pdf
 
-### Kaggle codes
+#### Kaggle codes
 https://www.kaggle.com/danofer/time2vec-water-levels
 
-### Github codes
+#### Github codes
 https://github.com/email81227/Time2Vec-TensorFlow2/tree/master/Time2Vec
 https://github.com/cerlymarco/keras-hypetune
 https://github.com/tensorflow/addons/issues/2508
 https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Time2Vec/Time2Vec.ipynb
 
-### Towards Data Science articles
+#### Towards Data Science articles
 https://towardsdatascience.com/neural-networks-with-sine-basis-function-c5c13fd63513 (paper on sine basis function)
 https://towardsdatascience.com/time2vec-for-time-series-features-encoding-a03a4f3f937e

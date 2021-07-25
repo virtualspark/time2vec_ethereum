@@ -224,16 +224,16 @@ Stanley Tran
 ## References
 
 #### Reseach Papers
-https://arxiv.org/pdf/1907.05321.pdf
+https://arxiv.org/pdf/1907.05321.pdf <br>
 https://openreview.net/attachment?id=rklklCVYvB&name=original_pdf
 
 #### Kaggle codes
 https://www.kaggle.com/danofer/time2vec-water-levels
 
 #### Github codes
-https://github.com/email81227/Time2Vec-TensorFlow2/tree/master/Time2Vec
-https://github.com/cerlymarco/keras-hypetune
-https://github.com/tensorflow/addons/issues/2508
+https://github.com/email81227/Time2Vec-TensorFlow2/tree/master/Time2Vec <br>
+https://github.com/cerlymarco/keras-hypetune <br>
+https://github.com/tensorflow/addons/issues/2508 <br>
 https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Time2Vec/Time2Vec.ipynb
 
 #### Towards Data Science articles

@@ -237,5 +237,5 @@ https://github.com/tensorflow/addons/issues/2508
 https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Time2Vec/Time2Vec.ipynb
 
 #### Towards Data Science articles
-https://towardsdatascience.com/neural-networks-with-sine-basis-function-c5c13fd63513 (paper on sine basis function)
+https://towardsdatascience.com/neural-networks-with-sine-basis-function-c5c13fd63513 (paper on sine basis function) <br>
 https://towardsdatascience.com/time2vec-for-time-series-features-encoding-a03a4f3f937e

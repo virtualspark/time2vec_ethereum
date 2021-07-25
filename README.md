@@ -134,6 +134,12 @@ Note that we are currently using approximately 5 years of data for this project.
 	print(X_test.shape, y_test.shape)
 		
 Note that, for this part, the code is borrowed from this article: https://www.kaggle.com/danofer/time2vec-water-levels to create the Time2Vec + LSTM model.
+Time2Vec is a representation for time and it is defined as follow:
+
+![image](https://user-images.githubusercontent.com/39383679/126915761-562aa354-e0e4-4261-84f2-68f5491b808b.png)
+
+For a given scalar notion of time τ , Time2Vec of τ , denoted as t2v(τ), is a vector of size k + 1 where t2v(τ)[i] is the i th element of t2v(τ), F is a periodic activation function, and ωis and ϕis are learnable parameters.
+
 
 #### Part 4 - Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
 

@@ -220,3 +220,13 @@ We are currently observing the graph to compare the actual price with the predic
 ## Author
 
 Stanley Tran
+
+## References
+###### https://github.com/cerlymarco/keras-hypetune
+###### https://www.kaggle.com/danofer/time2vec-water-levels
+###### https://github.com/email81227/Time2Vec-TensorFlow2/tree/master/Time2Vec
+###### https://openreview.net/attachment?id=rklklCVYvB&name=original_pdf
+###### https://github.com/tensorflow/addons/issues/2508
+###### https://towardsdatascience.com/time2vec-for-time-series-features-encoding-a03a4f3f937e
+###### https://towardsdatascience.com/neural-networks-with-sine-basis-function-c5c13fd63513 (paper on sine basis function)
+###### https://github.com/cerlymarco/MEDIUM_NoteBook/blob/master/Time2Vec/Time2Vec.ipynb

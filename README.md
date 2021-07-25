@@ -112,7 +112,7 @@ Note that we are currently using approximately 5 years of data for this project.
     
 	return m
 		
-	##### PREPARE DATA TO FEED MODELS #####
+	##### Prepare data to feed models #####
 	SEQ_LEN = 20 # pattern X is the size of Seq_len (e.g. use the first 20 days to predict 21st day)
 	X, Y = [], []
 	for sequence in gen_sequence(df, SEQ_LEN, ['Close']):
@@ -124,7 +124,7 @@ Note that we are currently using approximately 5 years of data for this project.
 	X = np.asarray(X)
 	Y = np.asarray(Y)
 		
-	##### TRAIN TEST SPLIT #####
+	##### Train Test Split #####
 
 	train_dim = int(0.7*len(df))
 	X_train, X_test = X[:train_dim], X[train_dim:]
@@ -143,7 +143,7 @@ For a given scalar notion of time τ , Time2Vec of τ , denoted as t2v(τ), is a
 
 #### Part 4 - Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
 
-	### DEFINE PARAMETER GRID FOR HYPERPARMETER OPTIMIZATION ###
+	#### Define parameter grid for hyperparameter optimization ####
 
 	param_grid = {
 		'unit': [64,32],
@@ -164,7 +164,7 @@ You can refer to this article for more explanations regarding Grid Search: https
 		
 #### Part 5 - Apply the best parameters in the Time2Vec + LSTM model
 
-	### Application of the parameters coming from the Keras Grid Search with the best score
+	#### Application of the parameters coming from the Keras Grid Search with the best score ####
 	base_param = {
 		'unit': 32,
 		't2v_dim': 64,

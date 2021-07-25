@@ -136,7 +136,7 @@ Note that we are currently using approximately 5 years of data for this project.
 Note that, for this part, the code is borrowed from this article: https://www.kaggle.com/danofer/time2vec-water-levels to create the Time2Vec + LSTM model.
 Time2Vec is a representation for time and it is defined as follow:
 
-![image](https://user-images.githubusercontent.com/39383679/126915761-562aa354-e0e4-4261-84f2-68f5491b808b.png)
+<center> ![image](https://user-images.githubusercontent.com/39383679/126915761-562aa354-e0e4-4261-84f2-68f5491b808b.png) </center>
 
 For a given scalar notion of time τ , Time2Vec of τ , denoted as t2v(τ), is a vector of size k + 1 where t2v(τ)[i] is the i th element of t2v(τ), F is a periodic activation function (which is a sine function), and ωi and ϕi are learnable parameters. For more info regarding the paper of Time2Vec, here is the link: https://arxiv.org/pdf/1907.05321.pdf
 

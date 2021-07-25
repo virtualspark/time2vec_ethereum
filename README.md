@@ -137,7 +137,7 @@ Note that, for this part, the code is borrowed from this article: https://www.ka
 
 #### Part 4 - Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
 
-	### DEFINE PARAM GRID FOR HYPERPARM OPTIMIZATION ###
+	### DEFINE PARAMETER GRID FOR HYPERPARMETER OPTIMIZATION ###
 
 	param_grid = {
 		'unit': [64,32],
@@ -152,8 +152,11 @@ Note that, for this part, the code is borrowed from this article: https://www.ka
 
 	kgs_t2v = KerasGridSearch(hypermodel, param_grid, monitor='val_loss', greater_is_better=False, tuner_verbose=1)
 	kgs_t2v.search(X_train, y_train, validation_split=0.2, shuffle=False)
+
+Hyperparameters optimization is a big part of deep learning. Using KerasGridSearch enables you to find the best hyperparameters to tune your model.
+You can refer to this article for more explanations regarding Grid Search: https://machinelearningmastery.com/grid-search-hyperparameters-deep-learning-models-python-keras/
 		
-### Part 5 - Apply the best parameters in the Time2Vec + LSTM model
+#### Part 5 - Apply the best parameters in the Time2Vec + LSTM model
 
 	### Application of the parameters coming from the Keras Grid Search with the best score
 	base_param = {
@@ -169,7 +172,9 @@ Note that, for this part, the code is borrowed from this article: https://www.ka
 	history = model.fit(X_train, y_train, epochs=20, validation_split=0.2, shuffle=False)
 	model.evaluate(X_test, y_test)
 
-### Part 6 - Display the model loss with training and testing sets in plt graph
+After the best parameter had been generated in the Part 4, we use the best parameter in the model. 
+
+#### Part 6 - Display the model loss with training and testing sets in plt graph
 
 	plt.plot(history.history['loss'])
 	plt.plot(history.history['val_loss'])
@@ -179,9 +184,11 @@ Note that, for this part, the code is borrowed from this article: https://www.ka
 	plt.legend(['train', 'test'], loc='upper left')
 	plt.show()
 
+![image](https://user-images.githubusercontent.com/39383679/126915618-3a1a15e0-9901-466d-8cac-5128aa5a791e.png)
 
+We are currently plotting the loss variables vs epoch to see if the loss had been reduced when we trained our model after several epochs.
 
-### Part 7 - Display the actual and the predicted price in plt graph
+#### Part 7 - Display the actual and the predicted price in plt graph
 
 	y_hat = model.predict(X_test)
 
@@ -199,6 +206,10 @@ Note that, for this part, the code is borrowed from this article: https://www.ka
 	plt.legend(loc='best')
 	 
 	plt.show();
+
+![image](https://user-images.githubusercontent.com/39383679/126915624-76d4590a-645a-4562-8410-f425c044fa58.png)
+
+We are currently observing the graph to compare the actual price with the predicted price in the model. Note that we use the inverse_transform in order to scale data for better visualisation. 
 
 ## Author
 

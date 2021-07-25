@@ -5,11 +5,11 @@ The stage of the project consists of the following:
 
 1. Extracting Ethereum data from Yahoo Finance
 2. Preprocessing data using MinMaxScaler
-3. Define the Time2Vec model + LSTM (code borrowed from https://www.kaggle.com/danofer/time2vec-water-levels). Generate sequence and labels to prepare data to feed in the model.
-5. Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
-6. Apply the best parameters in the Time2Vec + LSTM model
-7. Display the model loss with training and testing sets in plt graph
-8. Display the actual and the predicted price in plt graph
+3. Define the Time2Vec model + LSTM. Generate sequence and labels to prepare data to feed in the model.
+4. Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
+5. Apply the best parameters in the Time2Vec + LSTM model
+6. Display the model loss with training and testing sets in plt graph
+7. Display the actual and the predicted price in plt graph
 
 
 ## Getting Started
@@ -82,53 +82,124 @@ Note that we are currently using approximately 5 years of data for this project.
             return K.concatenate([sin_trans, original], -1)
 			
 		
-		##### To create X and Y for you
-		def gen_sequence(id_df, seq_length, seq_cols):
+	##### To create X and Y for you #####
+	def gen_sequence(id_df, seq_length, seq_cols):
 			
-			data_matrix = id_df[seq_cols].values
-			num_elements = data_matrix.shape[0]
+		data_matrix = id_df[seq_cols].values
+		num_elements = data_matrix.shape[0]
 
-			for start, stop in zip(range(0, num_elements-seq_length), range(seq_length, num_elements)):
-				yield data_matrix[start:stop, :]
+		for start, stop in zip(range(0, num_elements-seq_length), range(seq_length, num_elements)):
+			yield data_matrix[start:stop, :]
 
-		def gen_labels(id_df, seq_length, label):
+	def gen_labels(id_df, seq_length, label):
 			
-			data_matrix = id_df[label].values
-			num_elements = data_matrix.shape[0]
+		data_matrix = id_df[label].values
+		num_elements = data_matrix.shape[0]
 			
-			return data_matrix[seq_length:num_elements, :]
+	return data_matrix[seq_length:num_elements, :]
 			
 		
 		
-		def T2V_NN(param, dim):
+	def T2V_NN(param, dim):
     
-			inp = layers.Input(shape=(dim,1))
-			x = T2V(param['t2v_dim'])(inp)
-			x = LSTM(param['unit'], activation=param['act'])(x)
-			x = Dense(1)(x)
+		inp = layers.Input(shape=(dim,1))
+		x = T2V(param['t2v_dim'])(inp)
+		x = LSTM(param['unit'], activation=param['act'])(x)
+		x = Dense(1)(x)
 			
-			m = Model(inp, x)
-			m.compile(loss='mse', optimizer='adam')
+		m = Model(inp, x)
+		m.compile(loss='mse', optimizer='adam')
     
-		return m
+	return m
 		
-		##### PREPARE DATA TO FEED MODELS #####
-		SEQ_LEN = 20 # pattern X is the size of Seq_len (e.g. use the first 20 days to predict 21st day)
-		X, Y = [], []
-		for sequence in gen_sequence(df, SEQ_LEN, ['Close']):
-			X.append(sequence)
+	##### PREPARE DATA TO FEED MODELS #####
+	SEQ_LEN = 20 # pattern X is the size of Seq_len (e.g. use the first 20 days to predict 21st day)
+	X, Y = [], []
+	for sequence in gen_sequence(df, SEQ_LEN, ['Close']):
+		X.append(sequence)
 			
-		for sequence in gen_labels(df, SEQ_LEN, ['Close']):
-			Y.append(sequence)
+	for sequence in gen_labels(df, SEQ_LEN, ['Close']):
+		Y.append(sequence)
 			
-		X = np.asarray(X)
-		Y = np.asarray(Y)
+	X = np.asarray(X)
+	Y = np.asarray(Y)
 		
-		##### TRAIN TEST SPLIT #####
+	##### TRAIN TEST SPLIT #####
 
-		train_dim = int(0.7*len(df))
-		X_train, X_test = X[:train_dim], X[train_dim:]
-		y_train, y_test = Y[:train_dim], Y[train_dim:]
+	train_dim = int(0.7*len(df))
+	X_train, X_test = X[:train_dim], X[train_dim:]
+	y_train, y_test = Y[:train_dim], Y[train_dim:]
 
-		print(X_train.shape, y_train.shape)
-		print(X_test.shape, y_test.shape)
+	print(X_train.shape, y_train.shape)
+	print(X_test.shape, y_test.shape)
+		
+Note that, for this part, the code is borrowed from this article: https://www.kaggle.com/danofer/time2vec-water-levels to create the Time2Vec + LSTM model.
+
+#### Part 4 - Use KerasGridSearch to find the best parameters (with the best score) to use for the Time2Vec + LSTM model
+
+	### DEFINE PARAM GRID FOR HYPERPARM OPTIMIZATION ###
+
+	param_grid = {
+		'unit': [64,32],
+		't2v_dim': [128,64,16],
+		'lr': [1e-2,1e-3], 
+		'act': ['elu','relu'], 
+		'epochs': 20,
+		'batch_size': [128,512,1024]
+	}
+		
+	hypermodel = lambda x: T2V_NN(param=x, dim=SEQ_LEN)
+
+	kgs_t2v = KerasGridSearch(hypermodel, param_grid, monitor='val_loss', greater_is_better=False, tuner_verbose=1)
+	kgs_t2v.search(X_train, y_train, validation_split=0.2, shuffle=False)
+		
+### Part 5 - Apply the best parameters in the Time2Vec + LSTM model
+
+	### Application of the parameters coming from the Keras Grid Search with the best score
+	base_param = {
+		'unit': 32,
+		't2v_dim': 64,
+		'lr': 1e-2, 
+		'act': 'elu', 
+		'epochs': 20,
+		'batch_size': 1024
+	}
+
+	model = T2V_NN(param=base_param, dim=SEQ_LEN)
+	history = model.fit(X_train, y_train, epochs=20, validation_split=0.2, shuffle=False)
+	model.evaluate(X_test, y_test)
+
+### Part 6 - Display the model loss with training and testing sets in plt graph
+
+	plt.plot(history.history['loss'])
+	plt.plot(history.history['val_loss'])
+	plt.title('model loss')
+	plt.ylabel('loss')
+	plt.xlabel('epoch')
+	plt.legend(['train', 'test'], loc='upper left')
+	plt.show()
+
+
+
+### Part 7 - Display the actual and the predicted price in plt graph
+
+	y_hat = model.predict(X_test)
+
+	# scale in a way that is easier to visualize in the graph (https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html)
+	# inverse_transform: Scale back the data to the original representation
+	y_test_inverse = scaler.inverse_transform(y_test)
+	y_hat_inverse = scaler.inverse_transform(y_hat)
+	 
+	plt.plot(y_test_inverse, label="Actual Price", color='green')
+	plt.plot(y_hat_inverse, label="Predicted Price", color='red')
+	 
+	plt.title('Ethereum price prediction')
+	plt.xlabel('Time [days]')
+	plt.ylabel('Price')
+	plt.legend(loc='best')
+	 
+	plt.show();
+
+## Author
+
+Stanley Tran

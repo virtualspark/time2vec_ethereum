@@ -1,3 +1,5 @@
+# Course: Neural Networks and Deep Learning - YCNG 229 at McGill University
+
 # Ethereum Price Prediction using Time2Vec + LSTM
 
 This project aims to develop an Ethereum price prediction machine learning model using Time2Vec. 

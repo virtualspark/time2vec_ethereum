@@ -1,4 +1,4 @@
-# Course: Neural Networks and Deep Learning - YCNG 229 at McGill University
+## Neural Networks and Deep Learning - YCNG 229 at McGill University
 
 # Ethereum Price Prediction using Time2Vec + LSTM
 
